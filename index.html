@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anthony Gonsalves — Bombay ka Solid Insaan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --gold:       #ffd97a;
+      --gold-mid:   rgba(255, 217, 122, 0.45);
+      --gold-faint: rgba(255, 217, 122, 0.06);
+      --bg:         #0e0806;
+      --warm:       #e8d5b0;
+      --warm-dim:   rgba(232, 213, 176, 0.52);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--warm);
+      font-family: 'Outfit', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── FILM GRAIN ─────────────────────────────── */
+    .grain {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0.06;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 220px 220px;
+      mix-blend-mode: screen;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .grain { animation: grainShift 0.45s steps(1) infinite; }
+    }
+    @keyframes grainShift {
+      0%   { background-position:   0%    0%; }
+      10%  { background-position: -12%  -18%; }
+      20%  { background-position:  16%    7%; }
+      30%  { background-position:  -6%   17%; }
+      40%  { background-position:  11%  -12%; }
+      50%  { background-position: -17%   22%; }
+      60%  { background-position:   4%   -7%; }
+      70%  { background-position: -21%   11%; }
+      80%  { background-position:  22%  -16%; }
+      90%  { background-position:  -4%  -11%; }
+    }
+
+    /* ── ATMOSPHERE ──────────────────────────────── */
+    .bg-glow {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(ellipse 75% 55% at 50% 32%, rgba(185,95,14,0.16) 0%, transparent 65%),
+        radial-gradient(ellipse 35% 25% at 50% 15%, rgba(220,148,28,0.09) 0%, transparent 55%);
+    }
+    .vignette {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 1;
+      background: radial-gradient(ellipse 120% 120% at 50% 50%, transparent 30%, rgba(4,2,1,0.82) 100%);
+    }
+
+    /* ── LAYOUT ──────────────────────────────────── */
+    .page {
+      position: relative; z-index: 2;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 4rem 2rem 3.5rem;
+    }
+
+    /* ── ANIMATIONS ──────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes goldBreath {
+      0%, 100% { text-shadow: 0 0 45px rgba(255,200,75,0.18), 0 0 90px rgba(255,155,25,0.09); }
+      50%      { text-shadow: 0 0 70px rgba(255,200,75,0.34), 0 0 130px rgba(255,155,25,0.18); }
+    }
+
+    .fu { opacity: 0; animation: fadeUp 1s cubic-bezier(0.16,1,0.3,1) forwards; }
+    .fi { opacity: 0; animation: fadeIn 1.3s ease forwards; }
+
+    .d1 { animation-delay: 0.15s; }
+    .d2 { animation-delay: 0.40s; }
+    .d3 { animation-delay: 0.62s; }
+    .d4 { animation-delay: 0.82s; }
+    .d5 { animation-delay: 1.00s; }
+    .d6 { animation-delay: 1.18s; }
+    .d7 { animation-delay: 1.38s; }
+    .d8 { animation-delay: 1.68s; }
+    .d9 { animation-delay: 2.00s; }
+
+    /* ── FILM STRIP ───────────────────────────────── */
+    .filmstrip {
+      display: flex; gap: 5px;
+      margin-bottom: 2rem;
+    }
+    .fhole {
+      width: 7px; height: 11px;
+      border: 1px solid var(--gold);
+      border-radius: 2px;
+      opacity: 0.28;
+    }
+
+    /* ── PRESENTING ──────────────────────────────── */
+    .presenting {
+      display: flex; align-items: center; gap: 1rem;
+      margin-bottom: 1.6rem;
+      font-weight: 300;
+      font-size: 0.67rem;
+      letter-spacing: 0.44em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.72;
+    }
+    .pline { width: 34px; height: 1px; background: currentColor; flex-shrink: 0; }
+
+    /* ── TITLE ───────────────────────────────────── */
+    .t-anthony {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: clamp(3.8rem, 13.5vw, 10rem);
+      line-height: 0.88;
+      letter-spacing: 0.07em;
+      color: var(--gold);
+      text-align: center;
+      animation: fadeUp 1s cubic-bezier(0.16,1,0.3,1) 0.62s both,
+                 goldBreath 4.5s ease 1.65s infinite;
+    }
+    .t-gonsalves {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-weight: 400;
+      font-style: italic;
+      font-size: clamp(1.65rem, 5.2vw, 3.8rem);
+      line-height: 1.15;
+      letter-spacing: 0.22em;
+      color: var(--warm);
+      text-align: center;
+      opacity: 0.86;
+    }
+    .title-block { margin-bottom: 1.6rem; }
+
+    /* ── DIVIDER ─────────────────────────────────── */
+    .divider {
+      display: flex; align-items: center; gap: 0.8rem;
+      width: 100%; max-width: 540px;
+      margin: 0 0 1.8rem;
+    }
+    .dline {
+      flex: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-mid), transparent);
+    }
+    .dstar { color: var(--gold); opacity: 0.78; font-size: 0.85rem; flex-shrink: 0; }
+    .dstar.sm { font-size: 0.52rem; opacity: 0.45; }
+
+    /* ── SUBTITLE ────────────────────────────────── */
+    .subtitle {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1rem, 2.7vw, 1.3rem);
+      line-height: 1.65;
+      text-align: center;
+      max-width: 490px;
+      color: var(--warm);
+      opacity: 0.88;
+      margin-bottom: 1.8rem;
+    }
+    .subtitle .hl {
+      color: var(--gold);
+      font-style: normal;
+      font-weight: 700;
+    }
+
+    /* ── BODY TEXT ───────────────────────────────── */
+    .body-copy {
+      font-weight: 300;
+      font-size: clamp(0.875rem, 1.9vw, 0.98rem);
+      line-height: 1.95;
+      color: var(--warm-dim);
+      text-align: center;
+      max-width: 480px;
+      margin-top: 2.5rem;
+      margin-bottom: 0;
+    }
+
+    /* ── WIDGET ──────────────────────────────────── */
+    .widget-wrap { width: 100%; max-width: 460px; }
+
+    .widget-eyebrow {
+      font-weight: 300;
+      font-size: 0.61rem;
+      letter-spacing: 0.46em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 1.2rem;
+      opacity: 0.62;
+    }
+
+    .widget-box {
+      position: relative;
+      border: 1px solid rgba(255, 217, 122, 0.17);
+      border-radius: 3px;
+      padding: 1.75rem 1.5rem;
+      background: linear-gradient(140deg, rgba(255,217,122,0.045) 0%, transparent 55%);
+      transition: border-color 0.45s ease, box-shadow 0.45s ease;
+    }
+    .widget-box:hover {
+      border-color: rgba(255, 217, 122, 0.32);
+      box-shadow: 0 0 50px rgba(255,175,45,0.07), inset 0 0 50px rgba(255,175,45,0.03);
+    }
+
+    /* Corner brackets */
+    .c { position: absolute; width: 13px; height: 13px; border-color: var(--gold); border-style: solid; opacity: 0.42; }
+    .c.tl { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+    .c.tr { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+    .c.bl { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
+    .c.br { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+    /* ── FOOTER ──────────────────────────────────── */
+    .footer {
+      margin-top: 2.75rem;
+      font-weight: 300;
+      font-size: 0.59rem;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--warm-dim);
+      opacity: 0.22;
+      text-align: center;
+    }
+    .footer-dots { display: flex; justify-content: center; gap: 6px; margin-top: 6px; }
+    .dot { width: 3px; height: 3px; background: var(--gold); border-radius: 50%; opacity: 0.3; }
+
+    /* ── MOBILE ──────────────────────────────────── */
+    @media (max-width: 480px) {
+      .page { padding: 3rem 1.25rem 2.5rem; }
+      .filmstrip { gap: 4px; }
+      .fhole { width: 6px; height: 9px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="grain"   aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <main class="page">
+
+    <!-- Film strip -->
+    <div class="filmstrip fi d1" aria-hidden="true">
+      <div class="fhole"></div><div class="fhole"></div><div class="fhole"></div>
+      <div class="fhole"></div><div class="fhole"></div><div class="fhole"></div>
+      <div class="fhole"></div><div class="fhole"></div><div class="fhole"></div>
+      <div class="fhole"></div><div class="fhole"></div><div class="fhole"></div>
+    </div>
+
+    <!-- Presenting -->
+    <div class="presenting fi d2" aria-hidden="true">
+      <span class="pline"></span>Presenting<span class="pline"></span>
+    </div>
+
+    <!-- Title -->
+    <div class="title-block">
+      <span class="t-anthony">ANTHONY</span>
+      <span class="t-gonsalves fu d4">Gonsalves</span>
+    </div>
+
+    <!-- Divider -->
+    <div class="divider fi d5" aria-hidden="true">
+      <div class="dline"></div>
+      <span class="dstar">✦</span>
+      <span class="dstar sm">✦</span>
+      <span class="dstar">✦</span>
+      <div class="dline"></div>
+    </div>
+
+    <!-- Subtitle -->
+    <p class="subtitle fu d5">
+      "Bole toh… <span class="hl">Bombay ka sabse solid insaan</span>"
+    </p>
+
+    <!-- ElevenLabs widget -->
+    <div class="widget-wrap fu d6">
+      <div class="widget-eyebrow">✦ &nbsp; Baat Karo &nbsp; ✦</div>
+      <div class="widget-box">
+        <span class="c tl"></span>
+        <span class="c tr"></span>
+        <span class="c bl"></span>
+        <span class="c br"></span>
+        <elevenlabs-convai agent-id="agent_9101kq46ex7mebxr4wsamgwhkzp1"></elevenlabs-convai>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <p class="body-copy fu d8">
+      Born on the streets of Bombay. Raised by its chaos.<br>
+      Tempered by its unforgiving heart.<br><br>
+      Anthony Gonsalves knows every shortcut, every secret, every soul
+      this city holds. Sharp as a blade, loyal as a brother — honest as a man
+      with nothing left to prove.<br><br>
+      Bombay's original. Now, he speaks directly to you.
+    </p>
+
+    <!-- Footer -->
+    <footer class="footer fi d9">
+      <div>Bombay &nbsp;·&nbsp; Est. 1977</div>
+      <div class="footer-dots" aria-hidden="true">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      </div>
+    </footer>
+
+  </main>
+
+  <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+</body>
+</html>
